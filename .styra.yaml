@@ -1,0 +1,5 @@
+checks:
+  gha-kube:
+    system_id: b5bf9edb260941b29e384b438546ccbc
+    files:
+    - k8s/*.yaml
