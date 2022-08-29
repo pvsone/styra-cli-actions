@@ -1,0 +1,36 @@
+name: Styra Kube GitHub Actions Demo
+on:
+  push:
+    paths:
+      - 'k8s/**.yaml'
+jobs:
+  validate_kubernetes_manifests:
+    runs-on: ubuntu-latest
+    env:
+      STYRA_ORGANIZATION_ID: sullivan.styra.com
+      STYRA_TOKEN: ${{ secrets.STYRA_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download Styra CLI
+        run: |
+          curl -s -o styra https://docs.styra.com/bin/linux/amd64/styra
+          mv styra /usr/local/bin/styra
+          chmod +x /usr/local/bin/styra
+      - name: Run styra validate check-local
+        run: |
+          styra validate check-local -o styra-validate-results.json
+      - name: Format results
+        id: format_results
+        uses: mikefarah/yq@v4.27.3
+        with:
+          cmd: yq -C -P styra-validate-results.json
+        if: ${{ always() }}
+      - name: Print results
+        run: echo "${{ steps.format_results.outputs.result }}"
+        if: ${{ always() }}
+      # - name: Save results
+      #   uses: actions/upload-artifact@v3
+      #   if: ${{ always() }}
+      #   with:
+      #     name: styra-validate-results
+      #     path: styra-validate-results.json
