@@ -28,9 +28,3 @@ jobs:
       - name: Print results
         run: echo "${{ steps.format_results.outputs.result }}"
         if: ${{ always() }}
-      # - name: Save results
-      #   uses: actions/upload-artifact@v3
-      #   if: ${{ always() }}
-      #   with:
-      #     name: styra-validate-results
-      #     path: styra-validate-results.json

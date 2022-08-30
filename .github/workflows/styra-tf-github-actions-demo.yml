@@ -1,8 +1,8 @@
 name: Styra Terraform GitHub Actions Demo
-on: [push]
-  # push:
-  #   paths:
-  #     - 'tf/**.tf'
+on:
+  push:
+    paths:
+      - 'tf/**.tf'
 jobs:
   validate_terraform_plan:
     runs-on: ubuntu-latest
@@ -37,7 +37,3 @@ jobs:
           echo "Review the decision at: https://${STYRA_ORGANIZATION_ID}/systems/${STYRA_SYSTEM_ID}/decisions"
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan.binary
-
-      # - name: Print results
-      #   run: echo "${{ steps.format_results.outputs.result }}"
-      #   if: ${{ always() }}
