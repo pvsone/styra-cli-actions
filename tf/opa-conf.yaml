@@ -1,0 +1,18 @@
+discovery:
+  name: discovery
+  prefix: /systems/${STYRA_SYSTEM_ID}
+  service: styra
+labels:
+  system-id: ${STYRA_SYSTEM_ID}
+  system-type: template.terraform:1.0
+services:
+- credentials:
+    bearer:
+      token: ${STYRA_TOKEN}
+  name: styra
+  url: https://${STYRA_ORGANIZATION_ID}/v1
+- credentials:
+    bearer:
+      token: ${STYRA_TOKEN}
+  name: styra-bundles
+  url: https://${STYRA_ORGANIZATION_ID}/v1/bundles

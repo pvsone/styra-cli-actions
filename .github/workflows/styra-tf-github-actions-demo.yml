@@ -1,0 +1,43 @@
+name: Styra Terraform GitHub Actions Demo
+on: [push]
+  # push:
+  #   paths:
+  #     - 'tf/**.tf'
+jobs:
+  validate_terraform_plan:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: tf
+    env:
+      STYRA_ORGANIZATION_ID: sullivan.styra.com
+      STYRA_SYSTEM_ID: ef2b52545ec24d0ea9c1652b20185fff
+      STYRA_TOKEN: ${{ secrets.STYRA_TF_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_wrapper: false
+      - name: Download Styra CLI
+        run: |
+          curl -s -o styra https://docs.styra.com/bin/linux/amd64/styra
+          chmod +x styra
+      - name: Terraform Init
+        run: terraform init
+      - name: Terraform Plan
+        run: terraform plan --out tfplan.binary
+        env:
+          TF_VAR_provider_token: ${{ secrets.TF_API_TOKEN }}
+      - name: Terraform Show
+        run: terraform show -json tfplan.binary > tfplan.json
+      - name: Styra Vet
+        run: |
+          ./styra vet tfplan.json
+          echo "Review the decision at: https://${STYRA_ORGANIZATION_ID}/systems/${STYRA_SYSTEM_ID}/decisions"
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan.binary
+
+      # - name: Print results
+      #   run: echo "${{ steps.format_results.outputs.result }}"
+      #   if: ${{ always() }}
