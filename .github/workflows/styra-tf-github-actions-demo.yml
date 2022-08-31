@@ -32,8 +32,9 @@ jobs:
       - name: Terraform Show
         run: terraform show -json tfplan.binary > tfplan.json
       - name: Styra Vet
-        run: |
-          ./styra vet tfplan.json
-          echo "Review the decision at: https://${STYRA_ORGANIZATION_ID}/systems/${STYRA_SYSTEM_ID}/decisions"
+        run: ./styra vet tfplan.json
+      - name: Styra DAS Decision Details
+        run: echo "Review the decision at https://${STYRA_ORGANIZATION_ID}/systems/${STYRA_SYSTEM_ID}/decisions"
+        if: ${{ always() }}          
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan.binary
