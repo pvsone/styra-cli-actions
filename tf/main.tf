@@ -33,5 +33,5 @@ resource "fakewebservices_load_balancer" "primary_lb" {
 
 resource "fakewebservices_database" "prod_db" {
   name = "Production DB"
-  size = 128
+  size = 256
 }
