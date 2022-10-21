@@ -1,6 +1,6 @@
 package policy.fws.resources
 
-
+#comment
 enforce[decision] {  
   resource := vpc_resources[_]
   cidr := resource.values.cidr_block
